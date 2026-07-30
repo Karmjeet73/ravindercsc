@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
@@ -404,7 +404,9 @@
       <span class="text-accent-dark dark:text-accent text-xs font-bold tracking-widest uppercase">Our Promise</span>
       <h2 class="font-display font-bold text-3xl sm:text-4xl mt-3 text-slate-900 dark:text-white">Why Choose Ravinder CSC Center</h2>
     </div>
-    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="why-grid"></div>
+    <div class="mt-12 reveal">
+      <img src="csc-services-grid.png" alt="Ravinder CSC Center services: Online Registry, DTP NOC, Stamp Paper, TDS, Marriage File, Name Change Gazette, Affidavits, CSC Work" class="w-full h-auto rounded-2xl shadow-soft">
+    </div>
   </div>
 </section>
 
@@ -643,25 +645,6 @@ services.forEach((s,i)=>{
 });
 
 /* ---- why choose us ---- */
-const why = [
-  ["Fast Service","clock","Quick turnaround on applications so you spend less time waiting."],
-  ["Government Authorized","seal","An officially recognized Common Service Centre under Digital India."],
-  ["Secure Transactions","lock","Your documents and payments are handled with strict data safety."],
-  ["Affordable Pricing","rupee","Transparent, government-approved service charges — no hidden fees."],
-  ["Experienced Staff","users","A knowledgeable team trained across registry, legal drafting &amp; CSC work."],
-  ["Customer Support","headset","Friendly, patient guidance for every query, big or small."],
-];
-const whyGrid = document.getElementById('why-grid');
-why.forEach((w,i)=>{
-  const el = document.createElement('div');
-  el.className = 'reveal rounded-2xl glass shadow-soft p-6 hover:shadow-xl transition';
-  el.style.transitionDelay = (i%6)*50+'ms';
-  el.innerHTML = `
-    <div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary grid place-items-center mb-4">${svgIcon(w[1])}</div>
-    <h3 class="font-display font-semibold text-slate-900 dark:text-white">${w[0]}</h3>
-    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1.5">${w[2]}</p>`;
-  whyGrid.appendChild(el);
-});
 
 /* ---- reviews ---- */
 const reviews = [
