@@ -94,6 +94,21 @@
   .grad-hero { background: radial-gradient(1200px 600px at 80% -10%, rgba(0,166,81,0.10), transparent 60%), radial-gradient(1000px 500px at -10% 20%, rgba(0,102,204,0.10), transparent 60%); }
   #back-to-top { transition: opacity .3s ease, transform .3s ease; }
   input:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 3px solid #FFC107; outline-offset: 2px; }
+
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(4deg); }
+  }
+  .animate-floatSlow { animation: floatSlow 4.5s ease-in-out infinite; }
+
+  @keyframes stampIn {
+    0% { transform: scale(2.4) rotate(-18deg); opacity: 0; }
+    55% { transform: scale(0.9) rotate(-14deg); opacity: 1; }
+    75% { transform: scale(1.08) rotate(-14deg); }
+    100% { transform: scale(1) rotate(-14deg); opacity: 1; }
+  }
+  .animate-stampIn { animation: stampIn 0.7s cubic-bezier(.2,.9,.3,1.3) both; }
+
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
   }
@@ -181,6 +196,10 @@
 
 <!-- ============ FLOATING ACTION BUTTONS ============ -->
 <div class="fixed z-40 right-5 bottom-6 flex flex-col items-end gap-3">
+  <button id="chat-toggle" aria-label="Ask our Assistant"
+     class="relative w-14 h-14 rounded-full bg-accent-dark text-white flex items-center justify-center shadow-soft hover:scale-110 transition">
+    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  </button>
   <a href="https://wa.me/918053342833?text=Hi%2C%20I%20need%20information%20about%20CSC%20services" target="_blank" rel="noopener"
      aria-label="Chat on WhatsApp"
      class="relative w-14 h-14 rounded-full bg-secondary text-white flex items-center justify-center shadow-soft hover:scale-110 transition">
@@ -196,13 +215,43 @@
   </button>
 </div>
 
+<!-- ============ CHAT ASSISTANT PANEL ============ -->
+<div id="chat-panel" class="fixed z-50 right-5 bottom-24 w-[92vw] max-w-sm h-[65vh] max-h-[520px] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 flex-col overflow-hidden hidden">
+  <div class="bg-primary text-white px-5 py-4 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-2.5">
+      <span class="w-9 h-9 rounded-full bg-white/15 grid place-items-center">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </span>
+      <div>
+        <p class="font-display font-semibold text-sm leading-tight">Ravinder Assistant</p>
+        <p class="text-[11px] text-white/70 leading-tight">Usually replies instantly</p>
+      </div>
+    </div>
+    <button id="chat-close" aria-label="Close chat" class="w-8 h-8 rounded-full hover:bg-white/10 grid place-items-center">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 text-sm bg-slate-50 dark:bg-white/[0.02]"></div>
+  <div id="chat-quick" class="px-4 pb-2 flex flex-wrap gap-2 shrink-0"></div>
+  <form id="chat-form" class="flex items-center gap-2 p-3 border-t border-slate-100 dark:border-white/10 shrink-0">
+    <input id="chat-input" type="text" autocomplete="off" placeholder="Type your question..." class="flex-1 rounded-full border border-slate-200 dark:border-white/10 bg-transparent px-4 py-2.5 text-sm focus:outline-none focus:border-primary">
+    <button type="submit" aria-label="Send" class="w-10 h-10 shrink-0 rounded-full bg-primary text-white grid place-items-center hover:bg-primary-dark transition">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
+  </form>
+</div>
+
+
 <!-- ============ HEADER / NAV ============ -->
 <header id="top" class="sticky top-0 z-30 glass shadow-sm">
   <div class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
     <a href="#top" class="flex items-center gap-2.5">
       <span class="w-10 h-10 rounded-xl bg-primary text-white grid place-items-center font-display font-bold text-lg">RC</span>
       <span class="leading-tight">
-        <span class="block font-display font-bold text-slate-900 dark:text-white text-[15px]">Ravinder</span>
+        <span class="flex items-center gap-1.5">
+          <span class="font-display font-bold text-slate-900 dark:text-white text-[15px]">Ravinder</span>
+          <span id="status-badge" class="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"></span>
+        </span>
         <span class="block text-[11px] tracking-widest text-accent font-semibold">CSC & TYPING CENTER</span>
       </span>
     </a>
@@ -295,8 +344,29 @@
     <!-- hero illustration -->
     <div class="relative reveal">
       <div class="absolute -inset-6 bg-gradient-to-tr from-primary/10 via-transparent to-secondary/10 rounded-[2.5rem] blur-2xl"></div>
+
+      <!-- floating decorative icons -->
+      <div class="hidden sm:block absolute -top-6 -left-6 w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-soft grid place-items-center text-primary animate-floatSlow z-20">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+      </div>
+      <div class="hidden sm:block absolute top-1/3 -right-5 w-11 h-11 rounded-full bg-white dark:bg-slate-800 shadow-soft grid place-items-center text-secondary animate-floatSlow z-20" style="animation-delay:1.2s">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+      </div>
+      <div class="hidden sm:block absolute -bottom-5 -right-6 w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-soft grid place-items-center text-accent-dark animate-floatSlow z-20" style="animation-delay:2.1s">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
+      </div>
+
       <div class="relative glass rounded-[2rem] shadow-soft p-6 sm:p-10">
         <img src="hero-csc.jpg" alt="Ravinder CSC & Typing Center - customers being served at the office in Jind" class="w-full h-auto rounded-2xl shadow-md">
+
+        <!-- animated verified stamp -->
+        <div class="hidden sm:grid absolute top-3 right-3 sm:top-6 sm:right-6 w-20 h-20 rounded-full bg-secondary text-white place-items-center text-center shadow-xl z-20 animate-stampIn border-2 border-white/70" style="animation-delay:0.6s">
+          <div class="leading-tight">
+            <svg class="w-5 h-5 mx-auto mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <p class="text-[9px] font-bold tracking-wide">VERIFIED</p>
+            <p class="text-[8px] font-semibold opacity-80">CSC OFFICE</p>
+          </div>
+        </div>
 
         <div class="mt-4 relative flex items-center justify-between rounded-2xl text-white px-5 py-4 overflow-hidden" style="background-image:url('https://staticmap.openstreetmap.de/staticmap.php?center=29.3157,76.3145&zoom=14&size=600x240&maptype=mapnik'); background-size:cover; background-position:center;">
           <div class="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/80 to-primary/40"></div>
@@ -362,6 +432,35 @@
     <a href="#contact" class="inline-flex items-center gap-1.5 mt-2 text-primary font-semibold hover:gap-2.5 transition-all">Contact us for specific requirements
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="bg-white dark:bg-white/[0.02] border-y border-slate-100 dark:border-white/5">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-20 lg:py-24">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="text-accent-dark dark:text-accent text-xs font-bold tracking-widest uppercase">Simple Process</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl mt-3 text-slate-900 dark:text-white">How It Works</h2>
+      <p class="mt-4 text-slate-600 dark:text-slate-400">No confusion, no running around — just three simple steps.</p>
+    </div>
+    <div class="mt-14 grid sm:grid-cols-3 gap-10 relative">
+      <div class="hidden sm:block absolute top-7 left-[16.5%] right-[16.5%] h-0.5 bg-slate-200 dark:bg-white/10"></div>
+      <div class="reveal text-center relative">
+        <div class="w-14 h-14 mx-auto rounded-full bg-primary text-white grid place-items-center font-display font-bold text-lg relative z-10">1</div>
+        <h3 class="font-display font-semibold text-slate-900 dark:text-white mt-5">Call or Visit Us</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-[26ch] mx-auto">Reach us on 80533-42833 or WhatsApp, or walk in directly at Shop No. 2, Courier Market, Old Court Road, Jind.</p>
+      </div>
+      <div class="reveal text-center relative" style="transition-delay:80ms">
+        <div class="w-14 h-14 mx-auto rounded-full bg-primary text-white grid place-items-center font-display font-bold text-lg relative z-10">2</div>
+        <h3 class="font-display font-semibold text-slate-900 dark:text-white mt-5">Share Your Documents</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-[26ch] mx-auto">Tell us what you need — registry, marriage file, affidavit, or any CSC work. We'll guide you on exactly what to bring.</p>
+      </div>
+      <div class="reveal text-center relative" style="transition-delay:160ms">
+        <div class="w-14 h-14 mx-auto rounded-full bg-primary text-white grid place-items-center font-display font-bold text-lg relative z-10">3</div>
+        <h3 class="font-display font-semibold text-slate-900 dark:text-white mt-5">We File &amp; Deliver</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-[26ch] mx-auto">We handle the paperwork, filing, and follow-up — you get your completed work without repeated visits to any office.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -447,7 +546,18 @@
     </div>
   </div>
 
-  <div class="mt-12 grid md:grid-cols-3 gap-6" id="reviews-grid"></div>
+  <div class="mt-12 relative">
+    <div class="overflow-hidden" id="reviews-viewport">
+      <div class="flex transition-transform duration-500 ease-out" id="reviews-track"></div>
+    </div>
+    <button id="reviews-prev" aria-label="Previous review" class="hidden sm:grid absolute top-1/2 -left-4 lg:-left-6 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-soft place-items-center text-slate-600 dark:text-slate-200 hover:text-primary transition">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button id="reviews-next" aria-label="Next review" class="hidden sm:grid absolute top-1/2 -right-4 lg:-right-6 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-soft place-items-center text-slate-600 dark:text-slate-200 hover:text-primary transition">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <div class="flex justify-center gap-2 mt-6" id="reviews-dots"></div>
+  </div>
 </section>
 
 <!-- ============ FAQ ============ -->
@@ -585,6 +695,11 @@
         <a href="tel:+918053342833" aria-label="Call" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-primary transition">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
         </a>
+        <button id="share-site-btn" aria-label="Share this website" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-accent-dark transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5L15.4 6.5M8.6 13.5l6.8 4"/></svg>
+        </button>
+      </div>
+      <p id="share-hint" class="text-[11px] text-white/50 mt-2 hidden">Link copied — paste it in your WhatsApp chat!</p>
       </div>
     </div>
   </div>
@@ -648,14 +763,14 @@ if (updates.length === 0) {
 }
 
 const services = [
-  ["Online Registry","Sale, Transfer, Lease, Mortgage &amp; Adoption Deeds prepared and filed online with complete documentation support.","doc"],
-  ["DTP NOC File","NOC filing under DTP (Town &amp; Country Planning) handled end-to-end for your property.","home"],
-  ["Stamp Paper","Arrangement of Stamp Paper for all registry and legal documentation needs.","form"],
-  ["TDS on Property Sale","TDS filing and challan support for property sale transactions, done correctly and on time.","percent"],
-  ["Marriage File","Complete marriage registration file preparation, ready for submission with all required documents.","heart"],
-  ["Name Change Gazette Notification","Official name-change gazette notification processed in the correct legal format.","seal"],
-  ["Affidavits","All types of affidavits prepared and notarised as required.","doc"],
-  ["CSC-Related Work","Full range of Common Service Center (CSC) work handled at our Jind office.","monitor"],
+  ["Online Registry","Sale, Transfer, Lease, Mortgage &amp; Adoption Deeds prepared and filed online with complete documentation support.","doc",["Aadhaar Card","Property Papers","2 Passport Photos","PAN Card"]],
+  ["DTP NOC File","NOC filing under DTP (Town &amp; Country Planning) handled end-to-end for your property.","home",["Property Documents","Site Plan","Aadhaar Card"]],
+  ["Stamp Paper","Arrangement of Stamp Paper for all registry and legal documentation needs.","form",["ID Proof","Deed Value Details"]],
+  ["TDS on Property Sale","TDS filing and challan support for property sale transactions, done correctly and on time.","percent",["PAN Card (Buyer &amp; Seller)","Sale Deed Details","Bank Account Details"]],
+  ["Marriage File","Complete marriage registration file preparation, ready for submission with all required documents.","heart",["Aadhaar Card (Both)","Passport Photos (Both)","2 Witnesses' ID Proof"]],
+  ["Name Change Gazette Notification","Official name-change gazette notification processed in the correct legal format.","seal",["Affidavit for Name Change","Aadhaar Card","Newspaper Publication"]],
+  ["Affidavits","All types of affidavits prepared and notarised as required.","doc",["ID Proof","Details of Purpose"]],
+  ["CSC-Related Work","Full range of Common Service Center (CSC) work handled at our Jind office.","monitor",["Aadhaar Card","Relevant Scheme Documents"]],
 ];
 
 const icons = {
@@ -703,10 +818,15 @@ services.forEach((s,i)=>{
   const el = document.createElement('div');
   el.className = 'service-card reveal rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-100 dark:border-white/10 p-6';
   el.style.transitionDelay = (i%6)*40+'ms';
+  const docsList = (s[3]||[]).map(d=>`<li class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-secondary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>${d}</li>`).join('');
   el.innerHTML = `
     <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary grid place-items-center mb-4">${svgIcon(s[2])}</div>
     <h3 class="font-display font-semibold text-slate-900 dark:text-white">${s[0]}</h3>
-    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">${s[1]}</p>`;
+    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">${s[1]}</p>
+    ${s[3] ? `<div class="mt-4 pt-4 border-t border-dashed border-slate-200 dark:border-white/10">
+      <p class="text-[11px] font-bold tracking-wide uppercase text-accent-dark dark:text-accent mb-2">Documents Required</p>
+      <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-1.5">${docsList}</ul>
+    </div>` : ''}`;
   grid.appendChild(el);
 });
 
@@ -718,20 +838,71 @@ const reviews = [
   ["Pooja Sharma","4 months ago","Best registry and CSC centre in the Old Court Road area. They helped me with my sale deed and stamp paper work. The charges are genuine and behavior is very polite."],
   ["Vikash Dalal","6 months ago","Got my property sale deed and TDS work done from here. Excellent knowledge of the registry process and very supportive throughout, from stamp paper to filing."],
 ];
-const reviewsGrid = document.getElementById('reviews-grid');
-reviews.forEach((r,i)=>{
-  const el = document.createElement('div');
-  el.className = 'reveal rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-100 dark:border-white/10 shadow-soft p-6';
-  el.style.transitionDelay = (i*80)+'ms';
-  el.innerHTML = `
-    <div class="flex text-accent mb-3">${'<svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>'.repeat(5)}</div>
-    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">&ldquo;${r[2]}&rdquo;</p>
-    <div class="flex items-center gap-3 mt-5">
-      <span class="w-9 h-9 rounded-full bg-primary/10 text-primary grid place-items-center font-semibold text-sm">${r[0][0]}</span>
-      <div><p class="font-semibold text-sm text-slate-800 dark:text-white">${r[0]}</p><p class="text-xs text-slate-400">${r[1]}</p></div>
+
+/* ============ REVIEWS CAROUSEL ============ */
+(function(){
+  const track = document.getElementById('reviews-track');
+  const dotsWrap = document.getElementById('reviews-dots');
+  const prevBtn = document.getElementById('reviews-prev');
+  const nextBtn = document.getElementById('reviews-next');
+  if (!track) return;
+
+  const cardHTML = (r) => `
+    <div class="w-full sm:w-1/2 lg:w-1/3 shrink-0 px-3 box-border">
+      <div class="reveal in rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-100 dark:border-white/10 shadow-soft p-6 h-full">
+        <div class="flex text-accent mb-3">${'<svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>'.repeat(5)}</div>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">&ldquo;${r[2]}&rdquo;</p>
+        <div class="flex items-center gap-3 mt-5">
+          <span class="w-9 h-9 rounded-full bg-primary/10 text-primary grid place-items-center font-semibold text-sm">${r[0][0]}</span>
+          <div><p class="font-semibold text-sm text-slate-800 dark:text-white">${r[0]}</p><p class="text-xs text-slate-400">${r[1]}</p></div>
+        </div>
+      </div>
     </div>`;
-  reviewsGrid.appendChild(el);
-});
+  track.innerHTML = reviews.map(cardHTML).join('');
+
+  function slidesPerView(){
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+  }
+  let index = 0;
+  function maxIndex(){ return Math.max(0, reviews.length - slidesPerView()); }
+  function update(){
+    const pct = (100 / slidesPerView()) * index;
+    track.style.transform = `translateX(-${pct}%)`;
+    dotsWrap.querySelectorAll('button').forEach((d,i)=> d.className = `w-2 h-2 rounded-full transition ${i===index ? 'bg-primary w-5' : 'bg-slate-300 dark:bg-white/20'}`);
+  }
+  function buildDots(){
+    dotsWrap.innerHTML = '';
+    for (let i=0;i<=maxIndex();i++){
+      const d = document.createElement('button');
+      d.setAttribute('aria-label','Go to slide '+(i+1));
+      d.addEventListener('click', ()=>{ index=i; update(); resetAuto(); });
+      dotsWrap.appendChild(d);
+    }
+    if (index > maxIndex()) index = maxIndex();
+    update();
+  }
+  function next(){ index = index >= maxIndex() ? 0 : index+1; update(); }
+  function prev(){ index = index <= 0 ? maxIndex() : index-1; update(); }
+  nextBtn.addEventListener('click', ()=>{ next(); resetAuto(); });
+  prevBtn.addEventListener('click', ()=>{ prev(); resetAuto(); });
+
+  // touch swipe
+  let startX = 0;
+  track.addEventListener('touchstart', e=> startX = e.touches[0].clientX, {passive:true});
+  track.addEventListener('touchend', e=>{
+    const diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 40) { diff < 0 ? next() : prev(); resetAuto(); }
+  }, {passive:true});
+
+  // autoplay
+  let auto = setInterval(next, 4500);
+  function resetAuto(){ clearInterval(auto); auto = setInterval(next, 4500); }
+
+  buildDots();
+  window.addEventListener('resize', buildDots);
+})();
 
 /* ---- faq ---- */
 const faqs = [
@@ -825,6 +996,150 @@ document.getElementById('contact-form').addEventListener('submit', function(e){
   window.open(`https://wa.me/918053342833?text=${text}`, '_blank');
   this.reset();
 });
+
+/* ============ SHARE THIS SITE ============ */
+(function(){
+  const btn = document.getElementById('share-site-btn');
+  const hint = document.getElementById('share-hint');
+  if (!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const shareData = {
+      title: 'Ravinder CSC & Typing Center, Jind',
+      text: 'Registry, Legal Documentation, CSC & Typing Services in Jind — check this out:',
+      url: window.location.href
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch(e){ /* user cancelled */ }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        hint.classList.remove('hidden');
+        setTimeout(()=> hint.classList.add('hidden'), 3000);
+      } catch(e) {
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareData.text + ' ' + shareData.url)}`, '_blank');
+      }
+    }
+  });
+})();
+
+/* ============ LIVE OPEN/CLOSED STATUS ============ */
+(function(){
+  const badge = document.getElementById('status-badge');
+  if (!badge) return;
+  function updateStatus(){
+    const now = new Date();
+    const hour = now.getHours() + now.getMinutes()/60;
+    const isOpen = hour >= 9 && hour < 20; // 9 AM - 8 PM
+    if (isOpen) {
+      badge.className = 'hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-secondary/10 text-secondary';
+      badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>Open Now';
+    } else {
+      badge.className = 'hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-400/10 text-slate-500';
+      badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Closed Now';
+    }
+  }
+  updateStatus();
+  setInterval(updateStatus, 60000);
+})();
+
+/* ============ CHAT ASSISTANT ============ */
+(function(){
+  const panel = document.getElementById('chat-panel');
+  const toggleBtn = document.getElementById('chat-toggle');
+  const closeBtn = document.getElementById('chat-close');
+  const messages = document.getElementById('chat-messages');
+  const quick = document.getElementById('chat-quick');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+
+  // Knowledge base: keywords -> answer. Add more entries any time by copying a line.
+  const kb = [
+    { keys: ["registry","sale deed","transfer","lease","mortgage","adoption"], a: "We handle Online Registry for Sale, Transfer, Lease, Mortgage &amp; Adoption Deeds with full documentation support. You'll generally need Aadhaar, property papers, 2 photos, and PAN card." },
+    { keys: ["noc","dtp","town and country","town & country"], a: "We prepare DTP NOC files end-to-end. Please bring your property documents, site plan, and Aadhaar card." },
+    { keys: ["stamp paper","stamp"], a: "Yes, we arrange Stamp Paper for all registry and legal documentation needs — just bring your ID proof and deed value details." },
+    { keys: ["tds","property sale tax","tax on sale"], a: "We assist with TDS filing and challan support for property sale. You'll need PAN cards of buyer &amp; seller, sale deed details, and bank account details." },
+    { keys: ["marriage","shaadi","wedding file"], a: "We prepare complete Marriage Files ready for submission. Documents needed: Aadhaar (both), photos (both), and 2 witnesses' ID proof." },
+    { keys: ["name change","gazette"], a: "We process official Name Change Gazette Notifications. You'll need an affidavit for name change, Aadhaar card, and newspaper publication." },
+    { keys: ["affidavit"], a: "We prepare all types of affidavits — just bring your ID proof and details of the purpose." },
+    { keys: ["csc","common service","aadhaar update","government scheme"], a: "We handle the full range of CSC-related work at our Jind office. Bring your Aadhaar card and any relevant scheme documents." },
+    { keys: ["address","location","kaha","kahan","where"], a: "We're located at Shop No. 2, Courier Market, Old Court Road, Jind – 126102." },
+    { keys: ["timing","time","hours","open","kab khulta"], a: "We're open daily from 9:00 AM to 8:00 PM, including weekends." },
+    { keys: ["phone","number","contact","call"], a: "You can call or WhatsApp us anytime at 80533-42833." },
+    { keys: ["fee","price","charge","cost","paisa"], a: "We follow transparent, government-approved service charges — no hidden fees. For an exact quote on your specific work, please call 80533-42833." },
+    { keys: ["appointment","booking"], a: "No appointment needed for most services — just walk in with your documents during business hours." },
+    { keys: ["navodaya","nvs"], a: "Navodaya Vidyalaya Class 6 Admission 2027-28 applications are open — last date 31/07/2026, 11:59 PM. Contact us at 80533-42833 for help applying." },
+    { keys: ["fasal","farmer","kisan","byora"], a: "Meri Fasal Mera Byora registration last date is 31/07/2026. Contact us at 80533-42833 for home-based registration and Farmer ID." },
+    { keys: ["nurse","hkrn","medanta","job","naukri"], a: "HKRN Staff Nurse vacancy at Medanta Hospital, Gurugram is open. Contact 80533-42833 for form filling help." },
+    { keys: ["iti","merit list"], a: "Haryana ITI 2nd Merit List 2026 is out — check the official portal, or ask us to help you check your name." },
+  ];
+
+  function addMsg(text, who){
+    const row = document.createElement('div');
+    row.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
+    row.innerHTML = `<div class="${who==='user' ? 'bg-primary text-white' : 'bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/10'} rounded-2xl px-4 py-2.5 max-w-[80%] leading-relaxed">${text}</div>`;
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function findAnswer(q){
+    const lower = q.toLowerCase();
+    for (const item of kb) {
+      if (item.keys.some(k => lower.includes(k))) return item.a;
+    }
+    return null;
+  }
+
+  function respond(q){
+    const ans = findAnswer(q);
+    setTimeout(()=>{
+      if (ans) {
+        addMsg(ans, 'bot');
+      } else {
+        addMsg(`I don't have an exact answer for that yet. For quick help, please call or WhatsApp us directly at <a href="tel:+918053342833" class="text-primary font-semibold underline">80533-42833</a>.`, 'bot');
+      }
+    }, 400);
+  }
+
+  const quickReplies = ["Registry documents?","Office timing?","Address?","Marriage file?"];
+  quickReplies.forEach(q=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'text-xs font-medium border border-slate-200 dark:border-white/15 text-slate-600 dark:text-slate-300 rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition';
+    b.textContent = q;
+    b.addEventListener('click', ()=>{ addMsg(q,'user'); respond(q); });
+    quick.appendChild(b);
+  });
+
+  let opened = false;
+  function openChat(){
+    panel.classList.remove('hidden');
+    panel.classList.add('flex');
+    toggleBtn.setAttribute('aria-expanded','true');
+    if (!opened) {
+      addMsg("Namaste! 🙏 Main Ravinder CSC &amp; Typing Center ka assistant hoon. Aap Registry, Marriage File, Documents, Timing ya kisi bhi service ke baare mein pooch sakte hain.", 'bot');
+      opened = true;
+    }
+    input.focus();
+  }
+  function closeChat(){
+    panel.classList.add('hidden');
+    panel.classList.remove('flex');
+    toggleBtn.setAttribute('aria-expanded','false');
+  }
+
+  toggleBtn.addEventListener('click', ()=> panel.classList.contains('hidden') ? openChat() : closeChat());
+  closeBtn.addEventListener('click', closeChat);
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    input.value = '';
+    respond(q);
+  });
+})();
+
 </script>
 
 </body>
